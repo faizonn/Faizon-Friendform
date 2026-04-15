@@ -431,6 +431,22 @@ ${isMaritza ? '\nIMPORTANT: This is Maritza — the comadre who was upset you ac
 
 Respond as Faizon now:`;
 
+    // Send to Formspree (email notification)
+    try {
+      await fetch('https://formspree.io/f/xaqaqlpd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          status,
+          hate_scale: hateVal + '/10',
+          love_scale: loveVal + '/10',
+          details: extra,
+          final_note: finalNote
+        })
+      });
+    } catch(e) { console.log('Formspree error', e); }
+
     try {
       const res  = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
