@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Faizon Williams Friend Evaluation</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #f0ebff;
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+
+  .form-header {
+    background: white;
+    border-top: 10px solid #673ab7;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 24px auto 0;
+    max-width: 640px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
+  .form-header h1 { font-size: 24px; font-weight: 400; color: #202124; margin-bottom: 8px; }
+  .form-header .subtitle { font-size: 13px; color: #d93025; margin-bottom: 12px; }
+  .form-header p { font-size: 14px; color: #444; line-height: 1.6; }
+
+  .required-note { font-size: 13px; color: #444; max-width: 640px; margin: 12px auto 0; padding: 0 4px; }
+  .required-note span { color: #d93025; }
+
+  .card {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 12px auto;
+    max-width: 640px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
+
+  .question-label { font-size: 14px; color: #202124; margin-bottom: 10px; line-height: 1.5; }
+  .question-note { font-size: 12px; color: #888; margin-bottom: 14px; font-style: italic; }
+  .required-star { color: #d93025; margin-left: 2px; }
+
+  input[type="text"], textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #dadce0;
+    padding: 8px 0 4px;
+    font-size: 14px;
+    font-family: 'Roboto', Arial, sans-serif;
+    color: #202124;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+  }
+
+  input[type="text"]:focus, textarea:focus { border-bottom: 2px solid #673ab7; }
+  textarea { min-height: 70px; }
+
+  .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+
+  .radio-option, .checkbox-option {
+    display: flex; align-items: flex-start; gap: 12px;
+    cursor: pointer; font-size: 14px; color: #202124; line-height: 1.4;
+  }
+
+  .radio-option input, .checkbox-option input {
+    width: 18px; height: 18px; margin-top: 1px;
+    accent-color: #673ab7; cursor: pointer; border-bottom: none; flex-shrink: 0;
+  }
+
+  /* Sliders */
+  .dual-slider-block { margin-bottom: 24px; }
+  .dual-slider-block:last-child { margin-bottom: 0; }
+  .dual-slider-label { font-size: 13px; font-weight: 500; color: #444; margin-bottom: 10px; }
+
+  .hate-slider, .love-slider {
+    -webkit-appearance: none;
+    width: 100%; height: 4px;
+    border-radius: 2px;
+    outline: none; border: none; cursor: pointer;
+    margin-bottom: 6px;
+    display: block;
+  }
+  .hate-slider { background: linear-gradient(to right, #ffe082, #ef9a9a); }
+  .love-slider { background: linear-gradient(to right, #ffe082, #ce93d8); }
+
+  .hate-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px;
+    border-radius: 50%; background: #c62828; cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .love-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px;
+    border-radius: 50%; background: #673ab7; cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .hate-slider::-moz-range-thumb { width:20px;height:20px;border-radius:50%;background:#c62828;cursor:pointer;border:none; }
+  .love-slider::-moz-range-thumb { width:20px;height:20px;border-radius:50%;background:#673ab7;cursor:pointer;border:none; }
+
+  .slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: #5f6368; margin-bottom: 4px; }
+  .slider-number { text-align: center; font-size: 24px; font-weight: 500; color: #202124; margin: 4px 0 2px; }
+  .slider-readout { text-align: center; font-size: 12px; color: #666; min-height: 18px; font-style: italic; }
+
+  /* Toggle section */
+  .toggle-section { display: none; }
+  .toggle-section.active { display: block; }
+
+  .submit-row {
+    max-width: 640px; margin: 16px auto;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .submit-btn {
+    background: #673ab7; color: white; border: none;
+    padding: 12px 32px; border-radius: 4px;
+    font-size: 14px; font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 500; cursor: pointer; transition: background 0.2s;
+  }
+  .submit-btn:hover { background: #512da8; }
+  .submit-btn:disabled { background: #9e9e9e; cursor: not-allowed; }
+
+  .clear-link { font-size: 14px; color: #673ab7; cursor: pointer; }
+  .clear-link:hover { text-decoration: underline; }
+
+  .submitted-card {
+    background: white; border-radius: 8px; padding: 40px 24px;
+    margin: 24px auto; max-width: 640px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    text-align: center; display: none;
+  }
+  .submitted-card .big-emoji { font-size: 56px; margin-bottom: 16px; }
+  .submitted-card h2 { font-size: 22px; font-weight: 400; color: #202124; margin-bottom: 16px; }
+  .verdict-box {
+    background: #f3e5f5; border-radius: 8px; padding: 16px 20px;
+    font-size: 14px; color: #4a148c; line-height: 1.7;
+    text-align: left; margin: 0 0 16px;
+  }
+  .verdict-box.loading { color: #888; font-style: italic; text-align: center; }
+  .submitted-card p { font-size: 13px; color: #5f6368; line-height: 1.6; }
+
+  .google-footer { text-align: center; font-size: 12px; color: #5f6368; margin-top: 32px; }
+
+  .section-header { font-size: 15px; font-weight: 500; color: #202124; margin-bottom: 4px; }
+  .section-sub { font-size: 13px; color: #5f6368; margin-top: 4px; }
+
+  .maritza-alert {
+    display: none;
+    background: #fff3e0; border-left: 4px solid #f57c00;
+    border-radius: 4px; padding: 12px 16px;
+    font-size: 13px; color: #e65100; margin-top: 12px; line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div id="formContainer">
+  <div class="form-header">
+    <h1>The Official Faizon Williams Friend Evaluation 📋</h1>
+    <div class="subtitle">* Required</div>
+    <p>
+      Due to a <strong>significant and well-documented decline in friend activity</strong>, Faizon Williams is conducting a formal performance review of his social circle.
+      <br><br>
+      This form is completely confidential. (It is not. He will read every single word out loud at the next hangout, which you clearly do not attend.)
+      <br><br>
+      There are no wrong answers. There are absolutely wrong answers.
+    </p>
+  </div>
+
+  <p class="required-note"><span>*</span> Indicates required question</p>
+
+  <!-- NAME -->
+  <div class="card">
+    <div class="question-label">Full name <span class="required-star">*</span></div>
+    <div class="question-note">For "anonymous" record-keeping purposes only.</div>
+    <input type="text" placeholder="Your answer" id="nameInput" oninput="checkMaritza(this.value)">
+    <div class="maritza-alert" id="maritzaAlert">
+      ⚠️ System Notice: A <strong>Maritza Vargas Alvarez</strong> flag has been detected on this submission. Please note that comadre status does not grant preferential treatment per Section 3, Clause 2 of the Faizon Williams Friend Policy (2024 edition). Your application will be reviewed with full objectivity. Good luck. You will need it.
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="card">
+    <div class="question-label">Current friendship status <span class="required-star">*</span></div>
+    <div class="radio-group">
+      <label class="radio-option"><input type="radio" name="status" value="love" onchange="showSection('love')"> 💜 I love Faizon and I come bearing a grand gesture</label>
+      <label class="radio-option"><input type="radio" name="status" value="hate" onchange="showSection('hate')"> 😤 I hate Faizon and I have documented grievances</label>
+      <label class="radio-option"><input type="radio" name="status" value="both" onchange="showSection('both')"> 🤷 Both simultaneously. I contain multitudes.</label>
+    </div>
+  </div>
+
+  <!-- DUAL SLIDERS — shown for all paths -->
+  <div class="toggle-section" id="section-sliders">
+    <div class="card">
+      <div class="question-label">Rate your feelings on both scales <span class="required-star">*</span></div>
+
+      <div class="dual-slider-block">
+        <div class="dual-slider-label">😤 I hate Faizon on this scale:</div>
+        <input type="range" min="1" max="10" value="1" class="hate-slider" id="hateSlider" oninput="updateHate(this.value)">
+        <div class="slider-labels"><span>1 — He's fine I guess</span><span>10 — Dartboard photo</span></div>
+        <div class="slider-number" id="hateNumber">1</div>
+        <div class="slider-readout" id="hateReadout">He has done nothing wrong. Yet.</div>
+      </div>
+
+      <div class="dual-slider-block">
+        <div class="dual-slider-label">💜 I love Faizon on this scale:</div>
+        <input type="range" min="1" max="10" value="10" class="love-slider" id="loveSlider" oninput="updateLove(this.value)">
+        <div class="slider-labels"><span>1 — Acquaintance at best</span><span>10 — He is my everything</span></div>
+        <div class="slider-number" id="loveNumber">10</div>
+        <div class="slider-readout" id="loveReadout">Ride or die. No notes.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOVE PATH -->
+  <div class="toggle-section" id="section-love">
+    <div class="card" style="border-left: 4px solid #673ab7;">
+      <div class="section-header">💜 Grand Gesture Application</div>
+      <div class="section-sub">Complete this section carefully. Vague answers will be rejected. "We love you" has already been submitted and denied.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Describe your grand gesture in full detail <span class="required-star">*</span></div>
+      <div class="question-note">Minimum specificity required. "I'll be there for you" is not a gesture, it's a Friends lyric.</div>
+      <textarea placeholder="Your answer" id="gestureText"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Grand gesture budget <span class="required-star">*</span></div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="budget" value="a"> $0 — Emotional labor, a heartfelt speech, and visible tears (mine)</label>
+        <label class="radio-option"><input type="radio" name="budget" value="b"> $0–$20 — Snacks and a card that actually says something real</label>
+        <label class="radio-option"><input type="radio" name="budget" value="c"> $20–$50 — Dinner or a real gift. We understand the assignment.</label>
+        <label class="radio-option"><input type="radio" name="budget" value="d"> $50+ — No further questions. Application fast-tracked immediately.</label>
+        <label class="radio-option"><input type="radio" name="budget" value="e"> Classified — trust the process, Venmo will explain everything</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Proposed hangout activity</div>
+      <div class="question-note">"Telanovela night" is pre-approved. "Let's hang sometime" is not an activity.</div>
+      <input type="text" placeholder="e.g. Dinner, cooking together, movie night, a whole trip...">
+    </div>
+
+    <div class="card">
+      <div class="question-label">Dates you are ACTUALLY available</div>
+      <div class="question-note">Note: "April 15–18" will be automatically rejected if you are currently in or traveling to Florida.</div>
+      <input type="text" placeholder="Your answer">
+    </div>
+
+    <div class="card">
+      <div class="question-label">Are you a comadre of another applicant? <span class="required-star">*</span></div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="comadre" value="no"> No</label>
+        <label class="radio-option"><input type="radio" name="comadre" value="yes"> Yes (your application has been automatically flagged for additional review)</label>
+        <label class="radio-option"><input type="radio" name="comadre" value="idk"> I don't know what a comadre is (acceptable, you may proceed freely)</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- HATE PATH -->
+  <div class="toggle-section" id="section-hate">
+    <div class="card" style="border-left: 4px solid #c62828;">
+      <div class="section-header">😤 Official Grievance Submission</div>
+      <div class="section-sub">This is a safe space. (It is not. He will screenshot this and bring it up for years.)</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Primary offense <span class="required-star">*</span></div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="crime" value="a"> Left me on read for an unacceptable and well-documented amount of time</label>
+        <label class="radio-option"><input type="radio" name="crime" value="b"> Said "let's hang soon" and disappeared like smoke in a breeze</label>
+        <label class="radio-option"><input type="radio" name="crime" value="c"> Cancelled last minute with a weak, under-researched excuse</label>
+        <label class="radio-option"><input type="radio" name="crime" value="d"> Made me fill out a form just to spend time with him (the audacity)</label>
+        <label class="radio-option"><input type="radio" name="crime" value="e"> Accepted a comadre's application without consulting me first</label>
+        <label class="radio-option"><input type="radio" name="crime" value="f"> General neglect, emotional unavailability, and suspicious vibes</label>
+        <label class="radio-option"><input type="radio" name="crime" value="g"> Other — described below with dates and receipts</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Evidence, damage report, and full account of events</div>
+      <div class="question-note">Estimated dollar value of emotional damages is accepted and encouraged.</div>
+      <textarea placeholder="Your answer" id="grievanceText"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="question-label">How long have you been holding this in? <span class="required-star">*</span></div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="duration" value="a"> Days — fresh wound, still bleeding</label>
+        <label class="radio-option"><input type="radio" name="duration" value="b"> Weeks — it has been quietly simmering</label>
+        <label class="radio-option"><input type="radio" name="duration" value="c"> Months — it has become part of my personality at this point</label>
+        <label class="radio-option"><input type="radio" name="duration" value="d"> Years — I have been waiting for this exact form my entire life</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Despite all of the above, do you still love him? <span class="required-star">*</span></div>
+      <div class="question-note">All three options lead to the same answer. This is by design.</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="loveanyway" value="yes"> Yes, unfortunately</label>
+        <label class="radio-option"><input type="radio" name="loveanyway" value="yes2"> Yes but I will never admit it to his face directly</label>
+        <label class="radio-option"><input type="radio" name="loveanyway" value="yes3"> Obviously yes — there was no other option on this form and I knew that going in</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTH PATH -->
+  <div class="toggle-section" id="section-both">
+    <div class="card" style="border-left: 4px solid #f57c00;">
+      <div class="section-header">🤷 The Both Section</div>
+      <div class="section-sub">For emotionally complex individuals. Your honesty is respected here.</div>
+    </div>
+
+    <div class="card">
+      <div class="question-label">State your grievance AND your grand gesture. All in one place. <span class="required-star">*</span></div>
+      <div class="question-note">e.g. "I hate that he never responds but I'm still cooking him dinner on Saturday."</div>
+      <textarea placeholder="Your answer" id="bothText" style="min-height:100px;"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="question-label">Are you a comadre of someone who has already applied? <span class="required-star">*</span></div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="comadre2" value="no"> No</label>
+        <label class="radio-option"><input type="radio" name="comadre2" value="yes"> Yes and I have significant thoughts about that situation</label>
+        <label class="radio-option"><input type="radio" name="comadre2" value="iam"> I AM the comadre in question and I would like to speak to a manager</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL — shown for all paths -->
+  <div class="toggle-section" id="section-final">
+    <div class="card">
+      <div class="question-label">Final statement, threats, demands, or declarations of love</div>
+      <div class="question-note">This is your last opportunity. Use it wisely or don't. He'll read it either way.</div>
+      <textarea placeholder="Your answer" id="finalText"></textarea>
+    </div>
+
+    <div class="submit-row">
+      <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit</button>
+      <a class="clear-link" onclick="clearForm()">Clear form</a>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMITTED -->
+<div class="submitted-card" id="submittedCard">
+  <div class="big-emoji" id="submittedEmoji">✅</div>
+  <h2 id="submittedTitle">Response recorded.</h2>
+  <div class="verdict-box loading" id="verdictBox">Faizon is reviewing your submission...</div>
+  <p id="submittedMsg"></p>
+  <br>
+  <p style="font-size:12px;color:#bbb;">Not affiliated with Google. Built with petty energy and genuine love.</p>
+</div>
+
+<div class="google-footer">
+  This content is neither created nor endorsed by Google.<br><strong>Forms</strong>
+</div>
+
+<script>
+  const hateR = ['','He has done nothing wrong. Yet.','Minor irritation. Possibly just hunger.','Somewhat annoyed. Something happened.','Getting real. There is a story here.','Neutral chaos. Classic Faizon behavior.','Notably bothered. The form was the right call.','Pretty heated. This needs to be addressed.','Genuinely upset. Documentation required.','Full grievance mode. Lawyer may be involved.','MAXIMUM HATRED. (Still loves him. We all do.)'];
+  const loveR  = ['','Acquaintance energy. He should be nervous.','Friendly but guarded. Trust must be rebuilt.','Mild affection. There is potential here.','Decent friend tier. Room to improve.','Neutral warmth. Could be so much worse.','Genuine fondness. Good standing overall.','Real one energy. Rare and appreciated.','Day one behavior. Loyalty acknowledged.','Ride or die. He does not deserve this yet.','Unconditional. Unearned. Give it anyway.'];
+
+  function updateHate(v) {
+    document.getElementById('hateNumber').textContent = v;
+    document.getElementById('hateReadout').textContent = hateR[v];
+  }
+  function updateLove(v) {
+    document.getElementById('loveNumber').textContent = v;
+    document.getElementById('loveReadout').textContent = loveR[v];
+  }
+
+  function checkMaritza(val) {
+    const show = val.toLowerCase().includes('maritza') || val.toLowerCase().includes('vargas');
+    document.getElementById('maritzaAlert').style.display = show ? 'block' : 'none';
+  }
+
+  function showSection(type) {
+    ['love','hate','both'].forEach(t => document.getElementById('section-'+t).classList.remove('active'));
+    document.getElementById('section-'+type).classList.add('active');
+    document.getElementById('section-sliders').classList.add('active');
+    document.getElementById('section-final').classList.add('active');
+  }
+
+  async function submitForm() {
+    const status = document.querySelector('input[name="status"]:checked')?.value;
+    if (!status) { alert('Please select a friendship status to continue.'); return; }
+
+    const name      = document.getElementById('nameInput').value.trim() || 'Anonymous';
+    const hateVal   = document.getElementById('hateSlider').value;
+    const loveVal   = document.getElementById('loveSlider').value;
+    const finalNote = document.getElementById('finalText').value.trim() || 'None provided.';
+
+    let extra = '';
+    if (status === 'love')  extra = 'Grand gesture: ' + (document.getElementById('gestureText').value || 'Not described.');
+    if (status === 'hate')  extra = 'Grievance: '     + (document.getElementById('grievanceText').value || 'Not described.');
+    if (status === 'both')  extra = 'Both section: '  + (document.getElementById('bothText').value || 'Not described.');
+
+    const isMaritza = name.toLowerCase().includes('maritza') || name.toLowerCase().includes('vargas');
+
+    const emoji = status === 'love' ? '💜' : status === 'hate' ? '😤' : '🤷';
+    const title = status === 'love' ? 'Grand gesture received.' : status === 'hate' ? 'Complaint logged.' : 'Noted on all fronts.';
+
+    document.getElementById('submittedEmoji').textContent = emoji;
+    document.getElementById('submittedTitle').textContent = title;
+    document.getElementById('verdictBox').className = 'verdict-box loading';
+    document.getElementById('verdictBox').textContent = 'Faizon is reviewing your submission...';
+    document.getElementById('submittedMsg').textContent = '';
+    document.getElementById('formContainer').style.display = 'none';
+    document.getElementById('submittedCard').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+
+    const prompt = `You are Faizon Williams — funny, confident, a little tóxico, warm underneath. A friend just submitted a formal "Friend Evaluation" form about you. React to their specific submission in 3-4 short sentences MAX. Sound like a text message — casual, witty, a tiny bit petty, but with love underneath. No bullet points. No asterisks. No formal language.
+
+Submission:
+- Name: ${name}
+- Status: ${status === 'love' ? 'Loves you / Grand gesture' : status === 'hate' ? 'Hates you / Grievance' : 'Both simultaneously'}
+- Hate scale: ${hateVal}/10
+- Love scale: ${loveVal}/10
+- ${extra}
+- Final note: ${finalNote}
+${isMaritza ? '\nIMPORTANT: This is Maritza — the comadre who was upset you accepted her comadre\'s application. Reference the comadre situation playfully. Be tóxico but loving.' : ''}
+
+Respond as Faizon now:`;
+
+    try {
+      const res  = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data  = await res.json();
+      const reply = data.content?.find(b => b.type === 'text')?.text || 'Submission received. Stand by.';
+      document.getElementById('verdictBox').className = 'verdict-box';
+      document.getElementById('verdictBox').textContent = reply;
+      document.getElementById('submittedMsg').textContent = 'Response time: whenever he feels like it. Expected follow-up: in person, with no warning.';
+    } catch(e) {
+      document.getElementById('verdictBox').className = 'verdict-box';
+      document.getElementById('verdictBox').textContent = 'Submission received. Faizon is currently unavailable — probably left on read. Classic.';
+    }
+  }
+
+  function clearForm() {
+    document.querySelectorAll('input[type="text"], textarea').forEach(i => i.value = '');
+    document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => i.checked = false);
+    ['love','hate','both','sliders','final'].forEach(t => {
+      const el = document.getElementById('section-'+t);
+      if (el) el.classList.remove('active');
+    });
+    document.getElementById('hateSlider').value = 1;
+    document.getElementById('loveSlider').value = 10;
+    document.getElementById('maritzaAlert').style.display = 'none';
+    document.getElementById('submitBtn').disabled = false;
+    updateHate(1); updateLove(10);
+  }
+</script>
+</body>
+</html>
